@@ -9,6 +9,7 @@ import processing.core.PImage;
 public class Sketch extends PApplet {
     boolean isRacing = false;
     float playerSpeed = 1;
+    int gooseFrame = 0;
 
     // Goose images
     PImage embdenIdle;
@@ -52,6 +53,7 @@ public class Sketch extends PApplet {
             drawHome();
         } else {
             drawTrack();
+            animateGoose(embdenRun, 300, 300, 70);
         }
     }
 
@@ -67,7 +69,7 @@ public class Sketch extends PApplet {
     }
 
     public void drawButtons() {
-        fill(255);
+        fill(151, 118, 139);
         rect(200, 450, 400, 550);  // Feed button
         rect(450, 450, width, height);  // Race button
 
@@ -90,9 +92,18 @@ public class Sketch extends PApplet {
         fill(49, 113, 28);  // Green
         rect(width, height, 0, 350);  // Grass
         drawButtons();
-        // rect(200, 200, 400, 400);  // Bird placeholder
         image(embdenIdle, 300, 300, 200, 200);
 
         text("Running speed: " + playerSpeed, width / 2, 50);
+    }
+
+    public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseSize) {
+        if (frameCount % 15 == 0) {
+            if (gooseFrame == 3) {
+                gooseFrame = -1;
+            }
+            gooseFrame++;
+        }
+        image(gooseRun[gooseFrame], gooseX, gooseY, gooseSize, gooseSize);
     }
 }
