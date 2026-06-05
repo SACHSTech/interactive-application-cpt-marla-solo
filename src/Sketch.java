@@ -10,16 +10,14 @@ public class Sketch extends PApplet {
     boolean isRacing = false;
     float playerSpeed = 1;
     int gooseFrame = 0;
+    float finishLine;
 
-    // Goose images
+    // Goose image/animations
     PImage embdenIdle;
-    // PImage embdenRun1;
-    // PImage embdenRun2;
-    // PImage embdenRun3;
-    // PImage embdenRun4;
-
-    // Goose animations
     PImage[] embdenRun = new PImage[4];
+
+    // Misc. images
+    // PImage tree;
 
     public static void main(String[] args) {
         PApplet.main("Sketch");
@@ -37,8 +35,9 @@ public class Sketch extends PApplet {
         textAlign(CENTER);
         noStroke();
 
-        // Load goose images from the images/ folder
+        // Load images from the images/ folder
         embdenIdle = loadImage("images/embden-idle.png");
+        // tree = loadImage("images/tree.png");
 
         // Load goose running animations
         for (int i = 0; i < 4; i++) {
@@ -51,9 +50,14 @@ public class Sketch extends PApplet {
         background(96, 193, 237);
         if (!isRacing) {
             drawHome();
-        } else {
+        } 
+        
+        // Start race
+        else {
             drawTrack();
+            endTrack();
             animateGoose(embdenRun, 300, 300, 70);
+            
         }
     }
 
@@ -62,8 +66,12 @@ public class Sketch extends PApplet {
             if (mouseX > 200 && mouseX < 400 && mouseY > 450 && mouseY < 550) {
                 playerSpeed++;
                 System.out.println("Speed: " + playerSpeed);
-            } else if (mouseX > 450 && mouseY > 450) {
+            } 
+            
+            // "RACE!" button
+            else if (mouseX > 450 && mouseY > 450) {
                 isRacing = true;
+                finishLine = 1000;
             }
         }
     }
@@ -98,12 +106,28 @@ public class Sketch extends PApplet {
     }
 
     public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseSize) {
+        // Switch the running frame once every 15 frames
         if (frameCount % 15 == 0) {
+            // Restart animation at the last frame
             if (gooseFrame == 3) {
                 gooseFrame = -1;
             }
+
             gooseFrame++;
         }
+
         image(gooseRun[gooseFrame], gooseX, gooseY, gooseSize, gooseSize);
+    }
+
+    public void endTrack() {
+        finishLine -= playerSpeed / 50;
+        System.out.println(finishLine);
+
+        fill(180, 62, 62);  // Red
+        rect(finishLine, 50, finishLine - 20, 550);  // Finish line
+
+        if (finishLine < width / 2) {
+            isRacing = false;
+        }
     }
 }
