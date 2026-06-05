@@ -1,5 +1,5 @@
 import processing.core.PApplet;
-// import processing.core.PImage;
+import processing.core.PImage;
 // import java.util.ArrayList;
 
 /**
@@ -9,6 +9,16 @@ import processing.core.PApplet;
 public class Sketch extends PApplet {
     boolean isRacing = false;
     float playerSpeed = 1;
+
+    // Goose images
+    PImage embdenIdle;
+    // PImage embdenRun1;
+    // PImage embdenRun2;
+    // PImage embdenRun3;
+    // PImage embdenRun4;
+
+    // Goose animations
+    PImage[] embdenRun = new PImage[4];
 
     public static void main(String[] args) {
         PApplet.main("Sketch");
@@ -22,8 +32,17 @@ public class Sketch extends PApplet {
     @Override
     public void setup() {
         rectMode(CORNERS);
+        imageMode(CENTER);
         textAlign(CENTER);
         noStroke();
+
+        // Load goose images from the images/ folder
+        embdenIdle = loadImage("images/embden-idle.png");
+
+        // Load goose running animations
+        for (int i = 0; i < 4; i++) {
+            embdenRun[i] = loadImage("images/embden-run" + i + ".png");
+        }
     }
 
     @Override
@@ -63,13 +82,17 @@ public class Sketch extends PApplet {
         rect(width, height, 0, 50);  // Grass
         fill(118, 151, 27);
         rect(0, 125, width, 475);  // Track 
+        fill(17, 68, 21); 
+        rect(width, height, 0, 550);  // Side
     }
 
     public void drawHome() {
         fill(49, 113, 28);  // Green
         rect(width, height, 0, 350);  // Grass
         drawButtons();
-        rect(200, 200, 400, 400);  // Bird placeholder
+        // rect(200, 200, 400, 400);  // Bird placeholder
+        image(embdenIdle, 300, 300, 200, 200);
+
         text("Running speed: " + playerSpeed, width / 2, 50);
     }
 }
