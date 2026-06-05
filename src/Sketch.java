@@ -57,8 +57,9 @@ public class Sketch extends PApplet {
             drawTrack();
             endTrack();
             animateGoose(embdenRun, 300, 300, 70);
-            
         }
+
+        drawText();
     }
 
     public void mouseClicked() {
@@ -76,15 +77,21 @@ public class Sketch extends PApplet {
         }
     }
 
-    public void drawButtons() {
-        fill(151, 118, 139);
-        rect(200, 450, 400, 550);  // Feed button
-        rect(450, 450, width, height);  // Race button
-
-        fill(0);
+    public void drawText() {
         textSize(27);
-        text("Click to FEED!", width / 2, 510);
-        text("RACE!", 525, 535);
+        fill(0);
+
+        // HOME
+        if (!isRacing) {
+            text("Click to FEED!", width / 2, 510);
+            text("RACE!", 525, 535);
+            text("Running speed: " + playerSpeed, width / 2, 50);
+        }
+
+        // RACE
+        if (isRacing) {
+            text("Press X to leave the race.", width / 2, 35);
+        }
     }
 
     public void drawTrack() {
@@ -97,12 +104,16 @@ public class Sketch extends PApplet {
     }
 
     public void drawHome() {
+        // Background
         fill(49, 113, 28);  // Green
         rect(width, height, 0, 350);  // Grass
-        drawButtons();
-        image(embdenIdle, 300, 300, 200, 200);
 
-        text("Running speed: " + playerSpeed, width / 2, 50);
+        // Buttons
+        fill(151, 118, 139);  // Muted purple
+        rect(200, 450, 400, 550);  // Feed button
+        rect(450, 450, width, height);  // Race button
+
+        image(embdenIdle, 300, 300, 200, 200);
     }
 
     public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseSize) {
@@ -121,12 +132,19 @@ public class Sketch extends PApplet {
 
     public void endTrack() {
         finishLine -= playerSpeed / 50;
-        System.out.println(finishLine);
+        System.out.println("Finish line x: " + finishLine);
 
         fill(180, 62, 62);  // Red
         rect(finishLine, 50, finishLine - 20, 550);  // Finish line
 
         if (finishLine < width / 2) {
+            isRacing = false;
+        }
+    }
+
+    public void keyPressed() {
+        // Resign from race when X is typed
+        if (key == 'x' && isRacing == true) {
             isRacing = false;
         }
     }
