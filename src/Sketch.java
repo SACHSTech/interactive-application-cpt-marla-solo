@@ -8,8 +8,10 @@ import processing.core.PImage;
  */
 public class Sketch extends PApplet {
     boolean isRacing = false;
+    boolean playerWin;
     float playerSpeed = 1;
-    float canadaSpeed = random(50, 70);
+    float canadaSpeed;
+    float canadaPos;
     int gooseFrame = 1;
     float finishLine;
     float playerProgress;
@@ -66,8 +68,8 @@ public class Sketch extends PApplet {
         else {
             drawTrack();
             endTrack();
-            animateGoose(embdenRun, width / 2, height / 2, 70);
-            animateGoose(canadaRun, width / 2, 120, 70);
+            animateGoose(embdenRun, width / 2, height * (float)0.6, 70);
+            animateGoose(canadaRun, canadaPos, height / 3, 70);
         }
 
         drawText();
@@ -84,6 +86,7 @@ public class Sketch extends PApplet {
             else if (mouseX > 3 * (width / 4) && mouseY > 3 * (height / 4)) {
                 isRacing = true;
                 finishLine = 1000;
+                canadaPos = width / 2;
             }
         }
     }
@@ -130,7 +133,7 @@ public class Sketch extends PApplet {
     }
 
     public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseSize) {
-        // Switch the running frame once every 15 frames
+        // Switch the running frame once every 10 frames
         if (frameCount % 10 == 0) {
             // Restart animation at the last frame
             // if (gooseFrame == 3) {
@@ -139,6 +142,15 @@ public class Sketch extends PApplet {
 
             // gooseFrame++;
         }
+
+        // Move the canada goose' position depending on the player's speed
+        if (gooseRun == canadaRun) {
+            canadaSpeed = random(50, 70);
+            canadaPos += (canadaSpeed - playerSpeed) / 50;
+            System.out.println(gooseX);
+        }
+
+        
 
         image(gooseRun[gooseFrame], gooseX, gooseY, gooseSize, gooseSize);
     }
@@ -152,6 +164,12 @@ public class Sketch extends PApplet {
         rect(finishLine, height / 10, finishLine - 20, 9 * (height / 10));  // Finish line
 
         if (finishLine < width / 2) {
+            playerWin = true;
+            System.out.println("You win!");
+            isRacing = false;
+        } else if (finishLine < canadaPos) {
+            playerWin = false;
+            System.out.println("You lost!");
             isRacing = false;
         }
     }
