@@ -12,6 +12,7 @@ public class Sketch extends PApplet {
     float canadaSpeed = random(50, 70);
     int gooseFrame = 1;
     float finishLine;
+    float playerProgress;
 
     // Goose image/animations
     PImage embdenIdle;
@@ -29,7 +30,7 @@ public class Sketch extends PApplet {
 
     @Override
     public void settings() {
-        size(400, 400); 
+        size(600, 600); 
     }
 
     @Override
@@ -55,6 +56,8 @@ public class Sketch extends PApplet {
     @Override
     public void draw() {
         background(96, 193, 237);
+        noStroke();
+
         if (!isRacing) {
             drawHome();
         } 
@@ -109,6 +112,8 @@ public class Sketch extends PApplet {
         rect(0, height / (float)4.8, width, height / (float)1.26);  // Track 
         fill(17, 68, 21); 
         rect(width, height, 0, 9 * (height / 10));  // Side
+
+        progressBar();
     }
 
     public void drawHome() {
@@ -139,6 +144,7 @@ public class Sketch extends PApplet {
     }
 
     public void endTrack() {
+        noStroke();
         finishLine -= playerSpeed / 50;
         System.out.println("Finish line x: " + finishLine);
 
@@ -148,6 +154,21 @@ public class Sketch extends PApplet {
         if (finishLine < width / 2) {
             isRacing = false;
         }
+    }
+
+    public void progressBar() {
+        stroke(0);
+        strokeWeight(5);
+        fill(100);
+        rect(width / 20, height, width * (float)0.95, height * (float)0.95);
+
+        stroke(255, 134, 28);
+        fill(255);
+
+        // Calculate x value of goose pointers on the progress bar
+        playerProgress = ((width * (float)0.95) - ((finishLine - width / 2) / (float)1.3));
+
+        rect(playerProgress, height - 2, playerProgress + 10, height * (float)0.95);
     }
 
     public void keyPressed() {
