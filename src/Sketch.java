@@ -10,13 +10,10 @@ public class Sketch extends PApplet {
     boolean isRacing = false;
     boolean playerWin;
     float playerSpeed = 1;
-    float canadaSpeed;
     float canadaPos;
     int embdenFrame = 0;
     int canadaFrame = 0;
     float finishLine;
-    float playerProgress;
-    float canadaProgress;
 
     // Goose image/animations
     PImage embdenIdle;
@@ -64,14 +61,16 @@ public class Sketch extends PApplet {
 
         if (!isRacing) {
             drawHome();
+            image(embdenIdle, width / 2, height / 2, 150, 150);
         } 
         
         // Start race
         else {
             drawTrack();
+            progressBar();
             endTrack();
-            animateGoose(embdenRun, width / 2, height * (float)0.6, 70, 70);
-            animateGoose(canadaRun, canadaPos, height / 3, 85, 70);
+            animateGoose(embdenRun, width / 2, height * (float)0.6);
+            animateGoose(canadaRun, canadaPos, height / 3);
         }
 
         drawText();
@@ -79,9 +78,9 @@ public class Sketch extends PApplet {
 
     public void mouseClicked() {
         if (!isRacing) {
+            // "Click to FEED!" button
             if (mouseX > width / 3 && mouseX < 2 * (width / 3) && mouseY > 3 * (height / 4) && mouseY < height) {
                 playerSpeed++;
-                System.out.println("Speed: " + playerSpeed);
             } 
             
             // "RACE!" button
@@ -93,8 +92,16 @@ public class Sketch extends PApplet {
         }
     }
 
+    public void keyPressed() {
+        // Resign from race when X is typed
+        if (key == 'x' && isRacing == true) {
+            isRacing = false;
+        }
+    }
+
+    // Draws all text to the screen before and during the race
     public void drawText() {
-        textSize(20);
+        textSize(20);  
         fill(0);
 
         // HOME
@@ -110,17 +117,17 @@ public class Sketch extends PApplet {
         }
     }
 
+    // Draws the background for the race track
     public void drawTrack() {
         fill(49, 113, 28);  // Green
         rect(width, height, 0, height / 10);  // Grass
-        fill(118, 151, 27);
+        fill(118, 151, 27);  // Light green
         rect(0, height / (float)4.8, width, height / (float)1.26);  // Track 
-        fill(17, 68, 21); 
+        fill(17, 68, 21);   // Dark green
         rect(width, height, 0, 9 * (height / 10));  // Side
-
-        progressBar();
     }
 
+    // Draws the background and buttons for the menu
     public void drawHome() {
         // Background
         fill(49, 113, 28);  // Green
@@ -130,12 +137,16 @@ public class Sketch extends PApplet {
         fill(151, 118, 139);  // Muted purple
         rect(width / 3, height, 2 * (width / 3), 3 * (height / 4));  // Feed button
         rect(3 * (width / 4), 3 * (height / 4), width, height);  // Race button
-
-        image(embdenIdle, width / 2, height / 2, 150, 150);
     }
 
-    public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseWidth, float gooseHeight) {
-        
+    /**
+     * Draws a running goose animation at about 6 frames per second.
+     * @param gooseRun the array of running frames (4 in total)
+     * @param gooseX goose location on the x axis
+     * @param gooseY goose location on the y axis
+     */
+    public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY) {
+        float canadaSpeed;
 
         if (gooseRun == embdenRun) {
             // Switch the running frame once every 10 frames
@@ -147,14 +158,13 @@ public class Sketch extends PApplet {
 
                 embdenFrame++;
             }
-            image(gooseRun[embdenFrame], gooseX, gooseY, gooseWidth, gooseHeight);
+            image(gooseRun[embdenFrame], gooseX, gooseY, 70, 70);
         }
         
-        // Move the canada goose' position depending on the player's speed
+        // Move the canada goose's position depending on both its own and the player's speed
         if (gooseRun == canadaRun) {
             canadaSpeed = random(50, 70);
             canadaPos += (canadaSpeed - playerSpeed) / 50;
-            System.out.println(gooseX);
             if (frameCount % 10 == 0) {
                 // Restart animation at the last frame
                 if (canadaFrame == 3) {
@@ -162,36 +172,49 @@ public class Sketch extends PApplet {
                 }
 
                 canadaFrame++;
-                
             }   
-            image(gooseRun[canadaFrame], gooseX, gooseY, gooseWidth, gooseHeight);
+
+            image(gooseRun[canadaFrame], gooseX, gooseY, 85, 70);
         }
     }
 
+    /**
+     * Draws a finish line off-screen that progressively moves
+     * to the left depending on the player's speed.
+     * The game ends when either goose crosses the finish line.
+     */
     public void endTrack() {
         noStroke();
         finishLine -= playerSpeed / 50;
-        System.out.println("Finish line x: " + finishLine);
 
         fill(180, 62, 62);  // Red
         rect(finishLine, height / 10, finishLine - 20, 9 * (height / 10));  // Finish line
 
+        // Player wins
         if (finishLine < width / 2) {
             playerWin = true;
-            System.out.println("You win!");
             isRacing = false;
-        } else if (finishLine < canadaPos) {
+        } 
+        // Canada goose wins
+        else if (finishLine < canadaPos) {
             playerWin = false;
-            System.out.println("You lost!");
             isRacing = false;
         }
     }
 
+    /**
+     * Draws a progress bar to the screen that displays each goose's
+     * distance from the finish line using colour-coded pointers
+     */
     public void progressBar() {
+        float playerProgress;
+        float canadaProgress;
+
         strokeWeight(2);
         stroke(100);
         fill(150);
-        rect(width / 20, height - 17, width * (float)0.95, height - 12);
+
+        rect(width / 20, height - 17, width * (float)0.95, height - 12);  // Progress bar
 
         // Calculate x value of goose pointers on the progress bar
         playerProgress = ((width * (float)0.95) - ((finishLine - width / 2) / (float)1.3));
@@ -206,12 +229,5 @@ public class Sketch extends PApplet {
         stroke(255, 134, 28);
         fill(255);
         rect(playerProgress, height - 2, playerProgress + 10, height * (float)0.95);
-    }
-
-    public void keyPressed() {
-        // Resign from race when X is typed
-        if (key == 'x' && isRacing == true) {
-            isRacing = false;
-        }
     }
 }
