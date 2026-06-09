@@ -16,6 +16,7 @@ public class Sketch extends PApplet {
     int canadaFrame = 0;
     float finishLine;
     float playerProgress;
+    float canadaProgress;
 
     // Goose image/animations
     PImage embdenIdle;
@@ -187,17 +188,23 @@ public class Sketch extends PApplet {
     }
 
     public void progressBar() {
-        stroke(0);
-        strokeWeight(5);
-        fill(100);
-        rect(width / 20, height, width * (float)0.95, height * (float)0.95);
-
-        stroke(255, 134, 28);
-        fill(255);
+        strokeWeight(2);
+        stroke(100);
+        fill(150);
+        rect(width / 20, height - 17, width * (float)0.95, height - 12);
 
         // Calculate x value of goose pointers on the progress bar
         playerProgress = ((width * (float)0.95) - ((finishLine - width / 2) / (float)1.3));
+        canadaProgress = ((width * (float)0.95) - ((finishLine - canadaPos) / (float)1.3));
 
+        // Canada goose pointer
+        stroke(17, 13, 11);
+        fill(90, 74, 67);
+        rect(canadaProgress, height - 2, canadaProgress + 10, height * (float)0.95);
+
+        // Embden (player) goose pointer
+        stroke(255, 134, 28);
+        fill(255);
         rect(playerProgress, height - 2, playerProgress + 10, height * (float)0.95);
     }
 
