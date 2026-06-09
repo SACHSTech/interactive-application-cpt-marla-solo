@@ -1,19 +1,21 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/wPuP5asc)
-# ICS3U CPT – Interactive Processing Project
+# Goose Race
 
-This repository contains your ICS3U Culminating Performance Task (CPT).
+<img width="600" height="600" alt="mk-cpt" src="https://github.com/user-attachments/assets/ce0a06e5-5a2e-48c3-891c-bdf003d35ac3" />
 
-### Start here:
-Please read the full project instructions in **[INSTRUCTIONS.md](INSTRUCTIONS.md)**.
+## Description
+A goose racing game with pixel art graphics. The objective is to get your embden goose to the finish line before the canada goose does. At the end of the race, the results are displayed and the player is brought back to the first screen.
 
-Assessment criteria for this project are described in **[ASSESSMENT.md](ASSESSMENT.md)**.
+## Interaction
+- **Click the "FEED" button** to raise your speed
+- **Click the race button** to enter the track and start racing
+- Press **X** to exit the race track or results screen
 
-Once you are ready to submit, replace the contents of this README.md file with:
+## Limitations/incomplete features
+Some features that were originally going to be in the final product were:
+- scrolling greenery on the sides of the race track, utilising an ArrayList.
+- variations in running animation speed depending on how fast the goose is running
+- fully pixel art backgrounds for each screen
+- clicking during the race for a speed boost
 
-- a screenshot of your program in action
-- a brief description of your program
-- how the user interacts with it
-- any known limitations or incomplete features
-- an attribution section for any external assets used
-
-This README will be assessed as part of the project professionalism mark.
+## Attribution
+All assets are drawn by Marla Kamil.
