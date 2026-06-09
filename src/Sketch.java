@@ -1,9 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-// import java.util.ArrayList;
 
 /**
- * Template for programs with Processing graphics output.
+ * Draws an interactive goose race animation to the screen with clickable buttons and keyboard input.
  * @author Marla K.
  */
 public class Sketch extends PApplet {
@@ -158,8 +157,13 @@ public class Sketch extends PApplet {
         fill(49, 113, 28);  // Green
         rect(width, height, 0, height / 2);  // Grass
 
+        // Greenery
+        image(tree, 50, 200, 96, 282);
+        image(dandelions, 180, 320, 32, 32);
+        image(bush, 520, 320, 128, 74);
+
         // Buttons
-        fill(151, 118, 139);  // Muted purple
+        fill(151, 118, 139);  // Muted purple,
         rect(width / 3, height, 2 * (width / 3), 3 * (height / 4));  // Feed button
         rect(3 * (width / 4), 3 * (height / 4), width, height);  // Race button
     }
@@ -188,8 +192,10 @@ public class Sketch extends PApplet {
         
         // Move the canada goose's position depending on both its own and the player's speed
         if (gooseRun == canadaRun) {
-            canadaSpeed = random(50, 70);
+            canadaSpeed = random(30, 80);
             canadaPos += (canadaSpeed - playerSpeed) / 50;
+
+            // Switch the running frame once every 10 frames
             if (frameCount % 10 == 0) {
                 // Restart animation at the last frame
                 if (canadaFrame == 3) {
@@ -246,13 +252,13 @@ public class Sketch extends PApplet {
         canadaProgress = ((width * (float)0.95) - ((finishLine - canadaPos) / (float)1.3));
 
         // Canada goose pointer
-        stroke(17, 13, 11);
-        fill(90, 74, 67);
+        stroke(17, 13, 11);  // Dark grey
+        fill(90, 74, 67);    // Brown
         rect(canadaProgress, height - 2, canadaProgress + 10, height * (float)0.95);
 
         // Embden (player) goose pointer
-        stroke(255, 134, 28);
-        fill(255);
+        stroke(255, 134, 28);  // Orange
+        fill(255);             // White
         rect(playerProgress, height - 2, playerProgress + 10, height * (float)0.95);
     }
 
@@ -262,7 +268,7 @@ public class Sketch extends PApplet {
      */
     public void drawResults() {
         // Grass
-        fill(118, 151, 27);
+        fill(118, 151, 27);  // Light green
         rect(0, height / 5, width, height);
 
         // Win screen
