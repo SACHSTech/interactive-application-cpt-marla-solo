@@ -7,13 +7,15 @@ import processing.core.PImage;
  * @author Marla K.
  */
 public class Sketch extends PApplet {
-    boolean isRacing = false;
-    boolean playerWin;
     float playerSpeed = 1;
+    boolean playerWin;
     float canadaPos;
     int embdenFrame = 0;
     int canadaFrame = 0;
     float finishLine;
+
+    // Each number corresponds to a place/screen (3 in total). 1: home, 2: race track, 3: results screen.
+    int place = 1;
 
     // Goose image/animations
     PImage embdenIdle;
@@ -59,13 +61,14 @@ public class Sketch extends PApplet {
         background(96, 193, 237);
         noStroke();
 
-        if (!isRacing) {
+        // Home
+        if (place == 1) {
             drawHome();
             image(embdenIdle, width / 2, height / 2, 150, 150);
         } 
         
         // Start race
-        else {
+        else if (place == 2) {
             drawTrack();
             progressBar();
             endTrack();
@@ -73,11 +76,16 @@ public class Sketch extends PApplet {
             animateGoose(canadaRun, canadaPos, height / 3);
         }
 
+        // Race results
+        else if (place == 3) {
+            drawResults();
+        }
+
         drawText();
     }
 
     public void mouseClicked() {
-        if (!isRacing) {
+        if (place == 1) {
             // "Click to FEED!" button
             if (mouseX > width / 3 && mouseX < 2 * (width / 3) && mouseY > 3 * (height / 4) && mouseY < height) {
                 playerSpeed++;
@@ -85,7 +93,7 @@ public class Sketch extends PApplet {
             
             // "RACE!" button
             else if (mouseX > 3 * (width / 4) && mouseY > 3 * (height / 4)) {
-                isRacing = true;
+                place = 2;
                 finishLine = 1000;
                 canadaPos = width / 2;
             }
@@ -94,8 +102,13 @@ public class Sketch extends PApplet {
 
     public void keyPressed() {
         // Resign from race when X is typed
-        if (key == 'x' && isRacing == true) {
-            isRacing = false;
+        if (key == 'x' && place == 2) {
+            place = 1;
+        }
+
+        // Exit results screen
+        if (key == 'x' && place == 3) {
+            place = 1;
         }
     }
 
@@ -105,15 +118,27 @@ public class Sketch extends PApplet {
         fill(0);
 
         // HOME
-        if (!isRacing) {
+        if (place == 1) {
             text("Click to FEED!", width / 2, (height / 30) * 27);
             text("RACE!", 27 * (width / 30), 27 * (height / 30));
             text("Running speed: " + playerSpeed, width / 2, height / 8);
         }
 
         // RACE
-        if (isRacing) {
+        if (place == 2) {
             text("Press X to leave the race.", width / 2, height / 14);
+        }
+
+        // RESULTS
+        if (place == 3) {
+            text("Press X to go back.", width / 2, height * (float)0.95);
+            textSize(50);
+
+            if (playerWin) {
+                text("YOU WIN!", width / 2, height * (float)0.8);
+            } else {
+                text("YOU LOST :(", width / 2, height * (float)0.8);
+            }
         }
     }
 
@@ -192,13 +217,13 @@ public class Sketch extends PApplet {
 
         // Player wins
         if (finishLine < width / 2) {
+            place = 3;
             playerWin = true;
-            isRacing = false;
         } 
         // Canada goose wins
         else if (finishLine < canadaPos) {
+            place = 3;
             playerWin = false;
-            isRacing = false;
         }
     }
 
@@ -229,5 +254,25 @@ public class Sketch extends PApplet {
         stroke(255, 134, 28);
         fill(255);
         rect(playerProgress, height - 2, playerProgress + 10, height * (float)0.95);
+    }
+
+    /**
+     * Displays a message depending on who reaches the finish line first.
+     * @param playerWin is true when the player wins
+     */
+    public void drawResults() {
+        // Grass
+        fill(118, 151, 27);
+        rect(0, height / 5, width, height);
+
+        // Win screen
+        if (playerWin) {
+            image(embdenIdle, width / 2, height / 2);
+        }
+
+        // Lose screen
+        else {
+            image(canadaRun[1], width / 2, height / 2);
+        }
     }
 }
