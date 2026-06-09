@@ -12,7 +12,8 @@ public class Sketch extends PApplet {
     float playerSpeed = 1;
     float canadaSpeed;
     float canadaPos;
-    int gooseFrame = 1;
+    int embdenFrame = 0;
+    int canadaFrame = 0;
     float finishLine;
     float playerProgress;
 
@@ -32,7 +33,7 @@ public class Sketch extends PApplet {
 
     @Override
     public void settings() {
-        size(600, 600); 
+        size(600, 600, P2D); 
     }
 
     @Override
@@ -68,8 +69,8 @@ public class Sketch extends PApplet {
         else {
             drawTrack();
             endTrack();
-            animateGoose(embdenRun, width / 2, height * (float)0.6, 70);
-            animateGoose(canadaRun, canadaPos, height / 3, 70);
+            animateGoose(embdenRun, width / 2, height * (float)0.6, 70, 70);
+            animateGoose(canadaRun, canadaPos, height / 3, 85, 70);
         }
 
         drawText();
@@ -132,27 +133,38 @@ public class Sketch extends PApplet {
         image(embdenIdle, width / 2, height / 2, 150, 150);
     }
 
-    public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseSize) {
-        // Switch the running frame once every 10 frames
-        if (frameCount % 10 == 0) {
-            // Restart animation at the last frame
-            // if (gooseFrame == 3) {
-            //     gooseFrame = -1;
-            // }
+    public void animateGoose(PImage[] gooseRun, float gooseX, float gooseY, float gooseWidth, float gooseHeight) {
+        
 
-            // gooseFrame++;
+        if (gooseRun == embdenRun) {
+            // Switch the running frame once every 10 frames
+            if (frameCount % 10 == 0) {
+                // Restart animation at the last frame
+                if (embdenFrame == 3) {
+                    embdenFrame = -1;
+                }
+
+                embdenFrame++;
+            }
+            image(gooseRun[embdenFrame], gooseX, gooseY, gooseWidth, gooseHeight);
         }
-
+        
         // Move the canada goose' position depending on the player's speed
         if (gooseRun == canadaRun) {
             canadaSpeed = random(50, 70);
             canadaPos += (canadaSpeed - playerSpeed) / 50;
             System.out.println(gooseX);
+            if (frameCount % 10 == 0) {
+                // Restart animation at the last frame
+                if (canadaFrame == 3) {
+                    canadaFrame = -1;
+                }
+
+                canadaFrame++;
+                
+            }   
+            image(gooseRun[canadaFrame], gooseX, gooseY, gooseWidth, gooseHeight);
         }
-
-        
-
-        image(gooseRun[gooseFrame], gooseX, gooseY, gooseSize, gooseSize);
     }
 
     public void endTrack() {
